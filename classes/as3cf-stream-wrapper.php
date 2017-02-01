@@ -2,13 +2,15 @@
 
 class AS3CF_Stream_Wrapper extends Aws\S3\StreamWrapper {
 
+    static $client = null;
+
 	/**
 	 * Register the 's3://' stream wrapper
 	 *
 	 * @param Aws\S3\S3Client $client
 	 * @param string          $protocol
 	 */
-	public static function register( Aws\S3\S3Client $client, $protocol = 's3' ) {
+	public static function register( Aws\S3\S3ClientInterface $client, $protocol = 's3', Aws\CacheInterface $cache = NULL ) {
 		if ( in_array( $protocol, stream_get_wrappers() ) ) {
 			stream_wrapper_unregister( $protocol );
 		}

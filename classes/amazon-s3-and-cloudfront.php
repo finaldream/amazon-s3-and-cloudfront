@@ -1,5 +1,7 @@
 <?php
 
+use Aws\S3\S3Client;
+
 class Amazon_S3_And_CloudFront extends AWS_Plugin_Base {
 
 	/**
@@ -2423,7 +2425,9 @@ class Amazon_S3_And_CloudFront extends AWS_Plugin_Base {
 				$args = array();
 			}
 
-			$client = $this->aws->get_client()->get( 's3', $args );
+			$args['version'] = '2006-03-01';
+
+			$client = new S3Client( $args );
 			$this->set_client( $client );
 		}
 

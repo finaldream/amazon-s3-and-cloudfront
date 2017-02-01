@@ -26,6 +26,7 @@ Domain Path: /languages/
 // Then completely rewritten.
 */
 
+$GLOBALS['aws_meta']['amazon-web-services']['version'] = '1.0.1';
 $GLOBALS['aws_meta']['amazon-s3-and-cloudfront']['version'] = '1.1.5';
 
 $aws_plugin_version_required = '1.0.1';
@@ -35,27 +36,18 @@ require_once dirname( __FILE__ ) . '/classes/as3cf-utils.php';
 
 add_action( 'activated_plugin', array( 'AS3CF_Utils', 'deactivate_other_instances' ) );
 
-global $as3cf_compat_check;
-$as3cf_compat_check = new WP_AWS_Compatibility_Check(
-	'WP Offload S3 Lite',
-	'amazon-s3-and-cloudfront',
-	__FILE__,
-	'Amazon Web Services',
-	'amazon-web-services',
-	$aws_plugin_version_required
-);
+function amazon_web_services_init() {
+    $abspath = dirname( __FILE__ );
+    require_once $abspath . '/classes/aws-plugin-base.php';
+    require_once $abspath . '/classes/amazon-web-services.php';
+
+    global $amazon_web_services;
+    $amazon_web_services = new Amazon_Web_Services( __FILE__ );
+}
+
+add_action( 'init', 'amazon_web_services_init' );
 
 function as3cf_init( $aws ) {
-	global $as3cf_compat_check;
-
-	if ( method_exists( 'WP_AWS_Compatibility_Check', 'is_plugin_active' ) && $as3cf_compat_check->is_plugin_active( 'amazon-s3-and-cloudfront-pro/amazon-s3-and-cloudfront-pro.php' ) ) {
-		// Don't load if pro plugin installed
-		return;
-	}
-
-	if ( ! $as3cf_compat_check->is_compatible() ) {
-		return;
-	}
 
 	global $as3cf;
 	$abspath = dirname( __FILE__ );

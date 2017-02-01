@@ -173,6 +173,12 @@ class AS3CF_Plugin_Compatibility {
 		}
 
 		global $as3cf_compat_check;
+
+		if (empty($as3cf_compat_check)) {
+		    // disable compatibility check
+		    return;
+        }
+
 		if ( ! $as3cf_compat_check->check_capabilities() ) {
 			// User can't install plugins anyway, bail.
 			return;
