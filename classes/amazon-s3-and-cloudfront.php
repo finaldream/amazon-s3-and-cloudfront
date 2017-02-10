@@ -2425,6 +2425,13 @@ class Amazon_S3_And_CloudFront extends AWS_Plugin_Base {
 				$args = array();
 			}
 
+            if (!$this->aws->use_ec2_iam_roles()) {
+                $args['credentials'] = [
+                    'key'    => $this->aws->get_access_key_id(),
+                    'secret' => $this->aws->get_secret_access_key(),
+                ];
+            }
+
 			$args['version'] = '2006-03-01';
 
 			$client = new S3Client( $args );
